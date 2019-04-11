@@ -4,7 +4,7 @@ It requires the gems "HTTParty", "Oj" and "faye-websocket".
 
 To install ArangoRB: `gem install RBKubeMQ`.
 
-To use it in your application: `require "RBKubeMQ`.
+To use it in your application: `require rbkubemq`.
 
 For examples, look the tests in "/spec/lib/spec_helper"
 
