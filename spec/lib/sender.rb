@@ -1,5 +1,5 @@
 require_relative "../spec_helper"
-YOUR_HOST = "10.109.85.157"
+YOUR_HOST = ""
 
 describe "Sender" do
   context "The User" do
