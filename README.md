@@ -1,4 +1,4 @@
-This is a quick gem created for manage KubeMQ with Ruby.
+This is a quick gem created for manage [KubeMQ](https://kubemq.io/) with Ruby.
 
 It requires the gems "HTTParty", "Oj" and "faye-websocket".
 
