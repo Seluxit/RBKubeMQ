@@ -58,8 +58,9 @@ describe "Sender" do
           subscriber.on :message do |event|
             puts "message_received"
             subs << RBKubeMQ::Utility.load(event.data)
-            @end_subscriber = true
-            EM.stop if subs.size == 3
+            if subs.size == 3
+              @end_subscriber = true
+            end
           end
           subscriber.on :close do |event|
             puts "closed_subscriber"
@@ -77,8 +78,9 @@ describe "Sender" do
           ws.on :message do |event|
             puts "message_sent"
             stre << RBKubeMQ::Utility.load(event.data)
-            @end_streamer = true
-            EM.stop if stre.size == 3
+            if stre.size == 3
+              @end_streamer = true
+            end
           end
           ws.on :close do |event|
             puts "closed_streamer"
@@ -93,6 +95,7 @@ describe "Sender" do
 
       while(!@end_subscriber) do; end
       while(!@end_streamer) do; end
+      EM.stop
 
       expect(@subscriber[0]["Body"]).to eq "1"
       expect(@streamer[0]["Sent"]).to eq true

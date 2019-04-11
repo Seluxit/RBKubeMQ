@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.email       = ['stefano@seluxit.com']
   s.homepage    = 'https://github.com/StefanoMartin/RBKubeMQ'
   s.license     = 'MIT'
-  s.summary     = 'A simple gem for RBKubeMQ'
+  s.summary     = 'A simple gem for KubeMQ'
   s.description = "Ruby driver for RBKubeMQ"
   s.platform	   = Gem::Platform::RUBY
   s.require_paths = ['lib']
