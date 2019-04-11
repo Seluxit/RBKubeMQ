@@ -1,14 +1,14 @@
-This is a quick gem created for manage [KubeMQ](https://kubemq.io/) with Ruby.
+RBKubeMQ [![Gem Version](https://badge.fury.io/rb/rbkubemq.svg)](https://badge.fury.io/rb/rbkubemq)
+==============================
 
+This is a quick gem created to manage [KubeMQ](https://kubemq.io/) with Ruby.
+
+To install ArangoRB: `gem install RBKubeMQ`  
+To use it in your application: `require rbkubemq`  
+For examples, look the tests in "/spec/lib/spec_helper".  
 It requires the gems "HTTParty", "Oj" and "faye-websocket".
 
-To install ArangoRB: `gem install RBKubeMQ`.
-
-To use it in your application: `require rbkubemq`.
-
-For examples, look the tests in "/spec/lib/spec_helper"
-
-## Classes used
+## Used classes
 
 * [RBKubeMQ::Client](#RKMQCLient): to manage a general client
 * [RBKubeMQ::Sender](#RKMQSender): to manage a sender
