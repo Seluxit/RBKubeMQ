@@ -1,0 +1,2 @@
+# RBKubeMQ
+Gem for RBKubeMQ
