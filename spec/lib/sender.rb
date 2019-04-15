@@ -4,7 +4,7 @@ YOUR_HOST = ""
 describe "Sender" do
   context "The User" do
     before(:all) do
-  		@client = RBKubeMQ::Client.new host: YOUR_HOST
+  		@client = RBKubeMQ::Client.new host: $host
   		@sender = @client.sender(client_id: :client, channel: :channel)
   	end
 
@@ -20,7 +20,7 @@ describe "Sender" do
       Thread.new do
         EM.run do
           subscriber = @client.subscriber(client_id: :client,
-            channel: :channel, group: :test).events
+            channel: :channel, group: :test, type: :events)
           subscriber.on :open do |event|
             puts "open"
           end
@@ -30,6 +30,7 @@ describe "Sender" do
           end
           subscriber.on :close do |event|
             puts "closed"
+            EM.stop
           end
         end
       end
@@ -51,16 +52,15 @@ describe "Sender" do
       Thread.new(@subscriber) do |subs|
         EM.run do
           subscriber = @client.subscriber(client_id: :client,
-            channel: :channel, group: :test).events
+            channel: :channel, group: :test)
           subscriber.on :open do |event|
             puts "open_subscriber"
           end
           subscriber.on :message do |event|
             puts "message_received"
             subs << RBKubeMQ::Utility.load(event.data)
-            if subs.size == 3
-              @end_subscriber = true
-            end
+            @end_subscriber = true
+            EM.stop if subs.size == 3
           end
           subscriber.on :close do |event|
             puts "closed_subscriber"
@@ -71,18 +71,16 @@ describe "Sender" do
       Thread.new(@streamer) do |stre|
         EM.run do
           streamer = @client.streamer(client_id: :client, channel: :channel)
-          ws = streamer.start
-          ws.on :open do |event|
+          streamer.on :open do |event|
             puts "open_streamer"
           end
-          ws.on :message do |event|
+          streamer.on :message do |event|
             puts "message_sent"
             stre << RBKubeMQ::Utility.load(event.data)
-            if stre.size == 3
-              @end_streamer = true
-            end
+            @end_streamer = true
+            EM.stop if stre.size == 3
           end
-          ws.on :close do |event|
+          streamer.on :close do |event|
             puts "closed_streamer"
           end
           timer = EM::PeriodicTimer.new(0.1) do
@@ -107,7 +105,7 @@ describe "Sender" do
       Thread.new do
         EM.run do
           subscriber = @client.subscriber(client_id: :client,
-            channel: :channel, group: :test).requests
+            channel: :channel, group: :test, type: :commands)
           subscriber.on :open do |event|
             puts "open"
           end
@@ -134,7 +132,7 @@ describe "Sender" do
       Thread.new do
         EM.run do
           subscriber = @client.subscriber(client_id: :client,
-            channel: :channel, group: :test).queries
+            channel: :channel, group: :test, type: :queries)
           subscriber.on :open do |event|
             puts "open"
           end

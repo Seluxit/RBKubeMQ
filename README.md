@@ -63,26 +63,25 @@ i = 0
 EM.run do
   streamer = client.streamer(client_id: "YOUR_CLIENT", channel: "YOUR_CHANNEL",
     meta: nil, store: false)
-  ws = streamer.start # Create a websocket by starting it
 
-  ws.on :open do |event|
+  streamer.on :open do |event|
     p [:open]
   end
 
-  ws.on :message do |event|
+  streamer.on :message do |event|
     p [:message, RBKubeMQ::Utility.load(event.data)]
   end
 
-  ws.on :close do |event|
+  streamer.on :close do |event|
     p [:close]
-    ws = nil; EM.stop
+    streamer = nil; EM.stop
   end
 
   # Send a message every second
   timer = EM::PeriodicTimer.new(1) do
     i += 1
     puts "SENDING #{i}"
-    streamer.send(i, meta: "Stream") # Note that we use streamer and not ws to send the stream
+    streamer.send(i, meta: "Stream")
   end
 end
 ```
@@ -97,25 +96,24 @@ It cannot be use to send data.
 EM.run do
   subscriber = client.subscriber(client_id: "YOUR_CLIENT", channel: "YOUR_CHANNEL",
     group: "YOUR_GROUP")
-  ws = subscriber.events
 
-  ws.on :open do |event|
+  subscriber.on :open do |event|
     p [:open]
   end
 
-  ws.on :message do |event|
+  subscriber.on :message do |event|
     p [:message, RBKubeMQ::Utility.load(event.data)]
   end
 
-  ws.on :close do |event|
+  subscriber.on :close do |event|
     p [:close]
-    ws = nil; EM.stop
+    subscriber = nil; EM.stop
   end
 end
 ```
 
 In the example the subscriber is for events.
-You can subscribe to "events_store", "requests", and "queries".
+You can subscribe to "events_store", "commands", and "queries" by specifying "type: events_store" during the initialization.
 
 <a name="RKMQUtility"></a>
 ## RBKubeMQ::Utility
@@ -129,3 +127,13 @@ RBKubeMQ::Utility.load(string) # Parse hash in human format from KubeMQ
 ## RBKubeMQ::Error
 
 RBKubeMQ::Error is used to manage generic errors inside of the gem.
+
+## Test
+
+To test, create a file "config.yml" in the "spec" folder with inside:
+
+```ruby
+host: YOUR_KYBEMQ_HOST
+```
+
+Then run the tests with `rspec spec/lib/sender.rb`.

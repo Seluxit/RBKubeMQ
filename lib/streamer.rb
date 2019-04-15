@@ -1,5 +1,5 @@
 module RBKubeMQ
-  class Streamer
+  class Streamer < Faye::WebSocket::Client
     include Check
 
     def initialize(client:, client_id: nil, channel: nil, meta: nil, store: false)
@@ -9,14 +9,10 @@ module RBKubeMQ
       @channel = channel
       @meta    = meta.nil? ? meta.to_s : meta
       @store = store
+      super("#{@client.ws}/send/stream")
     end
 
-    attr_accessor :client_id, :channel, :meta, :store
-
-    def start
-      @ws = Faye::WebSocket::Client.new("#{@client.ws}/send/stream")
-      @ws
-    end
+    attr_reader :client_id, :channel, :meta, :store
 
     def send(message, meta: @meta, store: @store, client_id: @client_id,
         channel: @channel, id: nil)
@@ -28,7 +24,7 @@ module RBKubeMQ
         "Body" => message,
         "Store" => store
       }
-      @ws.send(RBKubeMQ::Utility.dump(body))
+      super(RBKubeMQ::Utility.dump(body))
     rescue StandardError => e
       raise RBKubeMQ::Error.new(e.message)
     end
