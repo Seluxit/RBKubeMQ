@@ -18,18 +18,21 @@ module RBKubeMQ
     attr_reader :host, :port, :uri, :tls, :ws
 
     def sender(*args)
+      args[0] ||= {}
       args[0][:client] = self if args[0].is_a?(Hash)
-      RBKubeMQ::Sender.new(args[0])
+      RBKubeMQ::Sender.new(*args)
     end
 
     def streamer(*args)
+      args[0] ||= {}
       args[0][:client] = self if args[0].is_a?(Hash)
-      RBKubeMQ::Streamer.new(args[0])
+      RBKubeMQ::Streamer.new(*args)
     end
 
     def subscriber(*args)
+      args[0] ||= {}
       args[0][:client] = self if args[0].is_a?(Hash)
-      RBKubeMQ::Subscriber.new(args[0])
+      RBKubeMQ::Subscriber.new(*args)
     end
   end
 end
