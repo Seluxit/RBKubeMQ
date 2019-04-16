@@ -7,7 +7,7 @@ module RBKubeMQ
     end
 
     def self.load(hash, parse_body: true)
-      hash = Oj.load(hash, mode: :json, symbol_keys: false) if hash.is_a?(String)
+      hash = Oj.load(hash, symbol_keys: false) if hash.is_a?(String)
       unless hash["Body"].nil?
         hash["Body"] = parsing_body(hash["Body"], parse_body: parse_body)
       end
