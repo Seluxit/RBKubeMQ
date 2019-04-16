@@ -1,5 +1,4 @@
 require_relative "../spec_helper"
-YOUR_HOST = ""
 
 describe "Sender" do
   context "The User" do
@@ -58,7 +57,7 @@ describe "Sender" do
           end
           subscriber.on :message do |event|
             puts "message_received"
-            subs << RBKubeMQ::Utility.load(event.data)
+            subs << RBKubeMQ::Utility.load(event.data, parse_body: false)
             @end_subscriber = true
             EM.stop if subs.size == 3
           end
